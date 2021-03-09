@@ -136,16 +136,6 @@ void epaper_wait(epaper_t *display) {
     } while (!gpio_get(display->busy_pin));
 }
 
-void epaper_init(epaper_t *display) {
-    size_t buffer_size = display->height * display->width / 8;
-
-    display->buffer = malloc(buffer_size);
-    display->previous_buffer = malloc(buffer_size);
-
-    memset(display->buffer, 0xff, buffer_size);
-    memset(display->previous_buffer, 0xff, buffer_size);
-}
-
 void epaper_update(epaper_t *display, bool partial) {
     // Reset
     gpio_put(display->rst_pin, 0);

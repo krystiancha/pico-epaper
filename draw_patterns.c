@@ -1,8 +1,16 @@
 /// Example program for the pico-epaper library
 
 #include <math.h>
+#include <memory.h>
 #include <pico/stdlib.h>
 #include <pico/epaper.h>
+
+#define WIDTH 400
+#define HEIGHT 300
+#define BUFFER_SIZE (HEIGHT * WIDTH / 8)
+
+uint8_t display_buffer[BUFFER_SIZE];
+uint8_t prev_display_buffer[BUFFER_SIZE];
 
 epaper_t display = {
         .spi = spi0,
@@ -10,9 +18,11 @@ epaper_t display = {
         .rst_pin = 8,
         .dc_pin = 7,
         .busy_pin = 9,
-        .width = 400,
-        .height = 300,
+        .width = WIDTH,
+        .height = HEIGHT,
         .black_border = false,
+        .buffer = display_buffer,
+        .previous_buffer = prev_display_buffer,
 };
 
 int main() {
@@ -30,8 +40,8 @@ int main() {
     gpio_set_dir(display.dc_pin, GPIO_OUT);
     gpio_set_dir(display.busy_pin, GPIO_IN);
 
-    // Initialize buffers and GPIO, buffers are initialized to white
-    epaper_init(&display);
+    memset(display_buffer, 0xff, BUFFER_SIZE);
+    memset(prev_display_buffer, 0xff, BUFFER_SIZE);
     
     // Display contents of the buffer (clear display to white)
     epaper_update(&display, false);
@@ -39,7 +49,7 @@ int main() {
     // Draw diagonal lines
     for (int x = 0; x < display.width; ++x) {
         int y = (int) ((float) display.height * (float) x / (float) display.width);
-        
+
         display.buffer[y * display.width / 8 + x / 8] &= ~(0x80 >> (x & 0x07));
         display.buffer[(display.height - y) * display.width / 8 + x / 8] &= ~(0x80 >> (x & 0x07));
     }
@@ -62,7 +72,7 @@ int main() {
     // Draw sine wave
     for (int x = 0; x < display.width; ++x) {
         int y = (display.height / 2) + 100 * sin(4.0 * M_PI * x / display.width);
-        
+
         display.buffer[y * display.width / 8 + x / 8] &= ~(0x80 >> (x & 0x07));
     }
 

@@ -57,9 +57,6 @@ typedef struct epaper {
     uint8_t *previous_buffer;
 } epaper_t;
 
-/// Allocate memory for display buffers and set buffer pointers
-void epaper_init(epaper_t *display);
-
 /// Send buffer contents to the display
 ///
 /// \param partial if true, uses partial update lookup table; full update otherwise
