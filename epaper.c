@@ -99,10 +99,16 @@ const unsigned char lut_partial_wb[] = {
 };
 
 void epaper_write_array(epaper_t *display, bool data, const uint8_t *src, size_t len) {
+    if (display->critical_section != NULL) {
+        critical_section_enter_blocking(display->critical_section);
+    }
     gpio_put(display->dc_pin, data);
     gpio_put(display->cs_pin, 0);
     spi_write_blocking(display->spi, src, len);
     gpio_put(display->cs_pin, 1);
+    if (display->critical_section != NULL) {
+        critical_section_exit(display->critical_section);
+    }
 }
 
 void epaper_write(epaper_t *display, bool data, int len, ...) {

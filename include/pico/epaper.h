@@ -2,6 +2,7 @@
 #define PICO_EPAPER_EPAPER_H
 
 #include <hardware/spi.h>
+#include <pico/critical_section.h>
 
 /// Epaper display configuration
 typedef struct epaper {
@@ -55,6 +56,16 @@ typedef struct epaper {
 
     /// Pointer to the buffer representing previous contents of the display
     uint8_t *previous_buffer;
+
+    /// Critical section for IRQ safe mutual exclusion of the epaper device
+    ///
+    /// If critical_section is set to non-NULL value, the critical section is entered (blocking) for the time of
+    /// executing every SPI command.
+    ///
+    /// If you use this library in a way that execution of a command can be interrupted (for example: main loop and
+    /// interrupt service routine), then set critical_section to an initialized critical section object (use
+    /// critical_section_init). Otherwise, remember to set this to NULL.
+    critical_section_t *critical_section;
 } epaper_t;
 
 /// Send buffer contents to the display
