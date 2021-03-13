@@ -12,13 +12,13 @@ A low-level library that provides a configuration struct and a function for upda
 
 A drawing library
 
-BUT it includes example code that [draws some patterns](draw_patterns.c) on the display.
+BUT it includes example code that [draws some patterns](src/examples/draw_patterns.c) on the display.
 
 ## Documentation
 
 See [include/pico/epaper.h](include/pico/epaper.h) for Doxygen style comments.
 
-See [draw_patterns.c](draw_patterns.c) for example program.
+See [draw_patterns.c](src/examples/draw_patterns.c) for example program.
 
 ## Building the pattern drawing example
 

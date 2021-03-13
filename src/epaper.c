@@ -1,8 +1,8 @@
 #include "pico/epaper.h"
 
-#include <stdarg.h>
 #include <malloc.h>
 #include <memory.h>
+#include <stdarg.h>
 #include <hardware/gpio.h>
 
 const unsigned char lut_vcom0[] = {
