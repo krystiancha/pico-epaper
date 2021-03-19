@@ -73,4 +73,51 @@ typedef struct epaper {
 /// \param partial if true, uses partial update lookup table; full update otherwise
 void epaper_update(epaper_t *display, bool partial);
 
+enum epaper_commands {
+    EPAPER_PSR = 0x00,
+    EPAPER_PWR = 0x01,
+    EPAPER_POF = 0x02,
+    EPAPER_PON = 0x04,
+    EPAPER_BTST = 0x06,
+    EPAPER_DSLP = 0x07,
+    EPAPER_DTM1 = 0x10,
+    EPAPER_DSP = 0x12,
+    EPAPER_DTM2 = 0x13,
+    EPAPER_LUTC = 0x20,
+    EPAPER_LUTWW = 0x21,
+    EPAPER_LUTBW = 0x22,
+    EPAPER_LUTR = 0x22,
+    EPAPER_LUTWB = 0x23,
+    EPAPER_LUTW = 0x23,
+    EPAPER_LUTBB = 0x24,
+    EPAPER_LUTB = 0x24,
+    EPAPER_PLL = 0x30,
+    EPAPER_CDI = 0x50,
+    EPAPER_TRES = 0x61,
+    EPAPER_VDCS = 0x82,
+};
+
+enum epaper_psr {
+    EPAPER_RES0 = 0,
+    EPAPER_RES1 = 1 << 6,
+    EPAPER_RES2 = 1 << 7,
+    EPAPER_RES3 = (1 << 7) | (1 << 6),
+    EPAPER_REG_EN = 1 << 5,
+    EPAPER_BWR = 1 << 4,
+    EPAPER_UD = 1 << 3,
+    EPAPER_SHL = 1 << 2,
+    EPAPER_SHD_N = 1 << 1,
+    EPAPER_RST_N = 1 << 0,
+};
+
+enum epaper_pwr {
+    EPAPER_VDS_EN = 1 << 1,
+    EPAPER_VDG_EN = 1 << 0,
+    EPAPER_VCOM_HV = 1 << 2,
+    EPAPER_VGHL_LV0 = 0,
+    EPAPER_VGHL_LV1 = 1 << 0,
+    EPAPER_VGHL_LV2 = 1 << 1,
+    EPAPER_VGHL_LV3 = (1 << 1) | (1 << 0),
+};
+
 #endif //PICO_EPAPER_EPAPER_H

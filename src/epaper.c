@@ -150,63 +150,68 @@ void epaper_update(epaper_t *display, bool partial) {
     epaper_wait(display);
 
     // Booster soft start
-    epaper_command(display, 0x06, 3, 0x17, 0x17, 0x17);
+    epaper_command(display, EPAPER_BTST, 3, 0x17, 0x17, 0x17);
 
     // Power setting
-    epaper_command(display, 0x01, 4, 0x03, 0x00, 0x2b, 0x2b);
+    epaper_command(display, EPAPER_PWR, 4, EPAPER_VDS_EN | EPAPER_VDG_EN, EPAPER_VGHL_LV0, 0x2b, 0x2b);
 
     // Power on
-    epaper_command(display, 0x04, 0);
+    epaper_command(display, EPAPER_PON, 0);
     epaper_wait(display);
 
     // Panel setting
-    epaper_command(display, 0x00, 2, 0xbf, 0x0d);  // second data byte undocumented
+    epaper_command(
+        display, 
+        EPAPER_PSR,
+        1,
+        EPAPER_RES0 | EPAPER_REG_EN | EPAPER_BWR | EPAPER_UD | EPAPER_SHL | EPAPER_SHD_N | EPAPER_RST_N
+    );
 
     // PLL control
-    epaper_command(display, 0x30, 1, 0x3c);
+    epaper_command(display, EPAPER_PLL, 1, 0x3c);
 
     // Resolution setting
-    epaper_command(display, 0x61, 4, 0x01, 0x90, 0x01, 0x2c);
+    epaper_command(display, EPAPER_TRES, 4, 0x01, 0x90, 0x01, 0x2c);
 
     // VCM_DC setting
-    epaper_command(display, 0x82, 1, 0x28);
+    epaper_command(display, EPAPER_VDCS, 1, 0x28);
 
     // Vcom and data interval setting
-    epaper_command(display, 0x50, 1, display->black_border ? 0x77 : 0x97);
+    epaper_command(display, EPAPER_CDI, 1, display->black_border ? 0x77 : 0x97);
 
     // LUT
-    epaper_write(display, 0, 1, 0x20);
+    epaper_write(display, 0, 1, EPAPER_LUTC);
     epaper_write_array(display, 1, !partial ? lut_vcom0 : lut_partial_vcom0, 44);
-    epaper_write(display, 0, 1, 0x21);
+    epaper_write(display, 0, 1, EPAPER_LUTWW);
     epaper_write_array(display, 1, !partial ? lut_ww : lut_partial_ww, 42);
-    epaper_write(display, 0, 1, 0x22);
+    epaper_write(display, 0, 1, EPAPER_LUTBW);
     epaper_write_array(display, 1, !partial ? lut_bw : lut_partial_bw, 42);
-    epaper_write(display, 0, 1, 0x23);
+    epaper_write(display, 0, 1, EPAPER_LUTWB);
     epaper_write_array(display, 1, !partial ? lut_wb : lut_partial_wb, 42);
-    epaper_write(display, 0, 1, 0x24);
+    epaper_write(display, 0, 1, EPAPER_LUTBB);
     epaper_write_array(display, 1, !partial ? lut_bb : lut_partial_bb, 42);
 
     // Transport old data
-    epaper_write(display, 0, 1, 0x10);
+    epaper_write(display, 0, 1, EPAPER_DTM1);
     epaper_write_array(display, 1, display->previous_buffer, display->height * display->width / 8);
 
     // Transport new data
-    epaper_write(display, 0, 1, 0x13);
+    epaper_write(display, 0, 1, EPAPER_DTM2);
     epaper_write_array(display, 1, display->buffer, display->height * display->width / 8);
 
     // Swap buffers
     memcpy(display->previous_buffer, display->buffer, display->height * display->width / 8);
 
     // Display refresh
-    epaper_command(display, 0x12, 0);
+    epaper_command(display, EPAPER_DSP, 0);
     epaper_wait(display);
 
     // Border floating
-    epaper_command(display, 0x50, 1, 0x17);
+    epaper_command(display, EPAPER_CDI, 1, 0x17);
 
     // Power off
-    epaper_command(display, 0x02, 0);
+    epaper_command(display, EPAPER_POF, 0);
 
     // Enter into deep sleep mode
-    epaper_command(display, 0x07, 1, 0xa5);
+    epaper_command(display, EPAPER_DSLP, 1, 0xa5);
 }
