@@ -12,7 +12,7 @@
 uint8_t display_buffer[BUFFER_SIZE];
 uint8_t prev_display_buffer[BUFFER_SIZE];
 
-epaper_t display = {
+struct epaper display = {
         .spi = spi0,
         .cs_pin = 6,
         .rst_pin = 8,

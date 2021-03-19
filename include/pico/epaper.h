@@ -5,7 +5,7 @@
 #include <pico/critical_section.h>
 
 /// Epaper display configuration
-typedef struct epaper {
+struct epaper {
 
     /// SPI bus
     ///
@@ -14,7 +14,7 @@ typedef struct epaper {
     ///
     /// The bus MUST be initialized before calling any epaper_* function.
     /// Use spi_init and gpio_set_function.
-    spi_inst_t *spi;
+    struct spi_inst *spi;
 
     /// Chip Select pin
     ///
@@ -65,13 +65,13 @@ typedef struct epaper {
     /// If you use this library in a way that execution of a command can be interrupted (for example: main loop and
     /// interrupt service routine), then set critical_section to an initialized critical section object (use
     /// critical_section_init). Otherwise, remember to set this to NULL.
-    critical_section_t *critical_section;
-} epaper_t;
+    struct critical_section *critical_section;
+};
 
 /// Send buffer contents to the display
 ///
 /// \param partial if true, uses partial update lookup table; full update otherwise
-void epaper_update(epaper_t *display, bool partial);
+void epaper_update(struct epaper *display, bool partial);
 
 enum epaper_commands {
     EPAPER_PSR = 0x00,
