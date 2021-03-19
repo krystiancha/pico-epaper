@@ -1,9 +1,10 @@
-#include "pico/epaper.h"
-
 #include <malloc.h>
 #include <memory.h>
 #include <stdarg.h>
 #include <hardware/gpio.h>
+#include <hardware/spi.h>
+#include <pico/critical_section.h>
+#include <pico/epaper.h>
 
 const unsigned char lut_vcom0[] = {
         0x00, 0x17, 0x00, 0x00, 0x00, 0x02,

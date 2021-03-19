@@ -2,8 +2,9 @@
 
 #include <math.h>
 #include <memory.h>
-#include <pico/stdlib.h>
+#include <hardware/spi.h>
 #include <pico/epaper.h>
+#include <pico/stdlib.h>
 
 #define WIDTH 400
 #define HEIGHT 300

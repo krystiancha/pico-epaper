@@ -1,8 +1,11 @@
 #ifndef PICO_EPAPER_EPAPER_H
 #define PICO_EPAPER_EPAPER_H
 
-#include <hardware/spi.h>
-#include <pico/critical_section.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+struct spi_inst;
+struct critical_section;
 
 /// Epaper display configuration
 struct epaper {
