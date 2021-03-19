@@ -6,27 +6,27 @@
 #include <pico/epaper.h>
 #include <pico/stdlib.h>
 
-#define WIDTH 400
-#define HEIGHT 300
-#define BUFFER_SIZE (HEIGHT * WIDTH / 8)
-
-uint8_t display_buffer[BUFFER_SIZE];
-uint8_t prev_display_buffer[BUFFER_SIZE];
-
-struct epaper display = {
-	.spi = spi0,
-	.cs_pin = 6,
-	.rst_pin = 8,
-	.dc_pin = 7,
-	.busy_pin = 9,
-	.width = WIDTH,
-	.height = HEIGHT,
-	.black_border = false,
-	.buffer = display_buffer,
-	.previous_buffer = prev_display_buffer,
-};
 
 int main() {
+	struct epaper display = {
+		.spi = spi0,
+		.cs_pin = 6,
+		.rst_pin = 8,
+		.dc_pin = 7,
+		.busy_pin = 9,
+		.width = 400,
+		.height = 300,
+		.black_border = false,
+	};
+
+	const size_t buffer_size = display.height * display.width / 8;
+
+	uint8_t display_buffer[buffer_size];
+	uint8_t prev_display_buffer[buffer_size];
+
+	display.buffer = display_buffer;
+	display.previous_buffer = prev_display_buffer;
+
 	spi_init(spi0, 4000000);
 	gpio_set_function(2, GPIO_FUNC_SPI);
 	gpio_set_function(3, GPIO_FUNC_SPI);
@@ -41,8 +41,8 @@ int main() {
 	gpio_set_dir(display.dc_pin, GPIO_OUT);
 	gpio_set_dir(display.busy_pin, GPIO_IN);
 
-	memset(display_buffer, 0xff, BUFFER_SIZE);
-	memset(prev_display_buffer, 0xff, BUFFER_SIZE);
+	memset(display_buffer, 0xff, buffer_size);
+	memset(prev_display_buffer, 0xff, buffer_size);
 
 	// Display contents of the buffer (clear display to white)
 	epaper_update(&display, false);
