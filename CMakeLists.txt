@@ -26,7 +26,7 @@ if (NOT TARGET _pico_epaper_inclusion_marker)
     set(PICO_EPAPER_PATH "${PICO_EPAPER_PATH}" CACHE PATH "Path to pico-epaper")
 
     add_library(pico_epaper INTERFACE)
-    target_sources(pico_epaper INTERFACE src/epaper.c)
+    target_sources(pico_epaper INTERFACE src/epaper.c src/luts.c)
     target_link_libraries(pico_epaper INTERFACE pico_stdlib hardware_spi)
     target_include_directories(pico_epaper INTERFACE include)
 
