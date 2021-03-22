@@ -12,7 +12,8 @@ extern const uint8_t lut_fastest_vcom[], lut_fastest_w2w[], lut_fastest_b2w[],
 	lut_fastest_w2b[], lut_fastest_b2b[];
 
 void epaper_write_array(const struct epaper *display, bool data, const uint8_t *src,
-		size_t len) {
+		size_t len)
+{
 	if (display->critical_section != NULL) {
 		critical_section_enter_blocking(display->critical_section);
 	}
@@ -25,7 +26,8 @@ void epaper_write_array(const struct epaper *display, bool data, const uint8_t *
 	}
 }
 
-void epaper_write(const struct epaper *display, bool data, int len, ...) {
+void epaper_write(const struct epaper *display, bool data, int len, ...)
+{
 	va_list valist;
 	va_start(valist, len);
 	uint8_t src[len];
@@ -37,7 +39,8 @@ void epaper_write(const struct epaper *display, bool data, int len, ...) {
 	epaper_write_array(display, data, src, len);
 }
 
-void epaper_command(const struct epaper *display, uint8_t command, int len, ...) {
+void epaper_command(const struct epaper *display, uint8_t command, int len, ...)
+{
 	va_list valist;
 	va_start(valist, len);
 	uint8_t src[len];
@@ -50,13 +53,15 @@ void epaper_command(const struct epaper *display, uint8_t command, int len, ...)
 	epaper_write_array(display, 1, src, len);
 }
 
-void epaper_wait(const struct epaper *display) {
+void epaper_wait(const struct epaper *display)
+{
 	do {
 		sleep_us(10);  // after 10 uS busy should be low
 	} while (!gpio_get(display->busy_pin));
 }
 
-void epaper_update(const struct epaper *display, bool partial) {
+void epaper_update(const struct epaper *display, bool partial)
+{
 	// Reset
 	gpio_put(display->rst_pin, 0);
 	sleep_ms(1);  // 10 uS reset signal should be enough

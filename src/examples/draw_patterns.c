@@ -7,7 +7,8 @@
 #include <pico/stdlib.h>
 
 
-int main() {
+int main()
+{
 	struct epaper display = {
 		.spi = spi0,
 		.cs_pin = 6,
