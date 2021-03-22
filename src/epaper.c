@@ -60,49 +60,33 @@ void
 epaper_wait(const struct epaper *display)
 {
 	do {
-		sleep_us(10);  // after 10 uS busy should be low
+		sleep_us(10);  /* after 10 uS busy should be low */
 	} while (!gpio_get(display->busy_pin));
 }
 
 void
 epaper_update(const struct epaper *display, bool partial)
 {
-	// Reset
 	gpio_put(display->rst_pin, 0);
-	sleep_ms(1);  // 10 uS reset signal should be enough
+	sleep_ms(1);  /* 10 uS reset signal should be enough */
 	gpio_put(display->rst_pin, 1);
 	epaper_wait(display);
 
-	// Booster soft start
 	epaper_command(display, EPAPER_BTST, 3, 0x17, 0x17, 0x17);
-
-	// Power setting
 	epaper_command(display, EPAPER_PWR, 4, EPAPER_VDS_EN | EPAPER_VDG_EN,
 		EPAPER_VGHL_LV0, 0x2b, 0x2b);
-
-	// Power on
 	epaper_command(display, EPAPER_PON, 0);
 	epaper_wait(display);
 
-	// Panel setting
 	epaper_command(display, EPAPER_PSR, 1, EPAPER_RES0 | EPAPER_REG_EN
 		| EPAPER_BWR | EPAPER_UD | EPAPER_SHL | EPAPER_SHD_N
 		| EPAPER_RST_N);
-
-	// PLL control
 	epaper_command(display, EPAPER_PLL, 1, 0x3c);
-
-	// Resolution setting
 	epaper_command(display, EPAPER_TRES, 4, 0x01, 0x90, 0x01, 0x2c);
-
-	// VCM_DC setting
 	epaper_command(display, EPAPER_VDCS, 1, 0x28);
-
-	// Vcom and data interval setting
 	epaper_command(display, EPAPER_CDI, 1,
 		display->black_border ? 0x77 : 0x97);
 
-	// LUT
 	epaper_write(display, 0, 1, EPAPER_LUTC);
 	epaper_write_array(display, 1,
 		!partial ? lut_faster_vcom : lut_fastest_vcom, 44);
@@ -119,30 +103,21 @@ epaper_update(const struct epaper *display, bool partial)
 	epaper_write_array(display, 1,
 		!partial ? lut_faster_b2b : lut_fastest_b2b, 42);
 
-	// Transport old data
 	epaper_write(display, 0, 1, EPAPER_DTM1);
 	epaper_write_array(display, 1, display->previous_buffer,
 		display->height * display->width / 8);
 
-	// Transport new data
 	epaper_write(display, 0, 1, EPAPER_DTM2);
 	epaper_write_array(display, 1, display->buffer,
 		display->height * display->width / 8);
 
-	// Swap buffers
 	memcpy(display->previous_buffer, display->buffer,
 		display->height * display->width / 8);
 
-	// Display refresh
 	epaper_command(display, EPAPER_DSP, 0);
 	epaper_wait(display);
 
-	// Border floating
 	epaper_command(display, EPAPER_CDI, 1, 0x17);
-
-	// Power off
 	epaper_command(display, EPAPER_POF, 0);
-
-	// Enter into deep sleep mode
 	epaper_command(display, EPAPER_DSLP, 1, 0xa5);
 }

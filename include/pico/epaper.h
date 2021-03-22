@@ -7,73 +7,83 @@
 struct spi_inst;
 struct critical_section;
 
-/// Epaper display configuration
+/*
+ * Epaper display configuraton.
+ */
 struct epaper {
 
-	/// SPI bus
-	///
-	/// SPI bus which has the ENC28J60.
-	/// Probably spi0 or spi1 from hardware/spi.h.
-	///
-	/// The bus MUST be initialized before calling any epaper_* function.
-	/// Use spi_init and gpio_set_function.
+	/*
+	 * SPI bus which has the epaper display.
+	 * Probably spi0 or spi1 from hardware/spi.h.
+	 * The bus MUST be initialized before calling any epaper_* function.
+	 * Use spi_init and gpio_set_function.
+	 */
 	struct spi_inst *spi;
 
-	/// Chip Select pin
-	///
-	/// This pin MUST be configured as output before calling any epaper_* function.
-	/// Use gpio_init and gpio_set_dir.
+	/*
+	 * Chip Select pin.
+	 * This pin MUST be configured as output before calling any epaper_*
+	 * function. Use gpio_init and gpio_set_dir.
+	 */
 	uint8_t cs_pin;
 
-	/// Reset pin
-	///
-	/// This pin MUST be configured as output before calling any epaper_* function.
-	/// Use gpio_init and gpio_set_dir.
+	/*
+	 * Reset pin.
+	 * This pin MUST be configured as output before calling any epaper_*
+	 * function. Use gpio_init and gpio_set_dir.
+	 */
 	uint8_t rst_pin;
 
-	/// Data/Command pin
-	///
-	/// This pin MUST be configured as output before calling any epaper_* function.
-	/// Use gpio_init and gpio_set_dir.
+	/*
+	 * Data/Command pin.
+	 * This pin MUST be configured as output before calling any epaper_*
+	 * function. Use gpio_init and gpio_set_dir.
+	 */
 	uint8_t dc_pin;
 
-	/// Busy pin
-	///
-	/// This pin MUST be configured as input before calling any epaper_* function.
-	/// Use gpio_init and gpio_set_dir.
+	/*
+	 * Busy pin.
+	 * This pin MUST be configured as input before calling any epaper_*
+	 * function. Use gpio_init and gpio_set_dir.
+	 */
 	uint8_t busy_pin;
 
-	/// Horizontal resolution of the display (px)
+	/* Horizontal resolution of the display (px) */
 	uint16_t width;
 
-	/// Vertical resolution of the display (px)
+	/* Vertical resolution of the display (px) */
 	uint16_t height;
 
-	/// If set to true, refreshing the display will draw a black border around the content
-	///
-	/// Otherwise the border will be white.
+	/*
+	 * If set to true, refreshing the display will draw a black border around
+	 * the content. Otherwise the border will be white.
+	 */
 	bool black_border;
 
-	/// Pointer to the buffer representing current contents of the display
+	/* Pointer to the buffer representing current contents of the display */
 	uint8_t *buffer;
 
-	/// Pointer to the buffer representing previous contents of the display
+	/* Pointer to the buffer representing previous contents of the display */
 	uint8_t *previous_buffer;
 
-	/// Critical section for IRQ safe mutual exclusion of the epaper device
-	///
-	/// If critical_section is set to non-NULL value, the critical section is entered (blocking) for the time of
-	/// executing every SPI command.
-	///
-	/// If you use this library in a way that execution of a command can be interrupted (for example: main loop and
-	/// interrupt service routine), then set critical_section to an initialized critical section object (use
-	/// critical_section_init). Otherwise, remember to set this to NULL.
+	/*
+	 * Critical section for IRQ safe mutual exclusion of the epaper device.
+	 * If critical_section is set to non-NULL value, the critical section is
+	 * entered (blocking) for the time of executing every SPI command.
+	 *
+	 * If you use this library in a way that execution of a command can be
+	 * interrupted (for example: main loop and interrupt service routine),
+	 * then set critical_section to an initialized critical section object
+	 * (use critical_section_init). Otherwise, remember to set this to NULL.
+	 */
 	struct critical_section *critical_section;
 };
 
-/// Send buffer contents to the display
-///
-/// \param partial if true, uses partial update lookup table; full update otherwise
+/*
+ * Send buffer contents to the display
+ *
+ * \param partial if true, uses partial update lookup table; full update otherwise
+ */
 void epaper_update(const struct epaper *display, bool partial);
 
 enum epaper_commands {
@@ -123,4 +133,4 @@ enum epaper_pwr {
 	EPAPER_VGHL_LV3 = (1 << 1) | (1 << 0),
 };
 
-#endif //PICO_EPAPER_EPAPER_H
+#endif

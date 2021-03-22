@@ -1,4 +1,4 @@
-/// Example program for the pico-epaper library
+/* Example program for the pico-epaper library */
 
 #include <math.h>
 #include <memory.h>
@@ -46,10 +46,10 @@ main()
 	memset(display_buffer, 0xff, buffer_size);
 	memset(prev_display_buffer, 0xff, buffer_size);
 
-	// Display contents of the buffer (clear display to white)
+	/* Display contents of the buffer (clear display to white) */
 	epaper_update(&display, false);
 
-	// Draw diagonal lines
+	/* Draw diagonal lines */
 	for (int x = 0; x < display.width; ++x) {
 		int y = (int) ((float) display.height * (float) x
 			/ (float) display.width);
@@ -60,10 +60,10 @@ main()
 			&= ~(0x80 >> (x & 0x07));
 	}
 
-	// Display contents of the buffer
+	/* Display contents of the buffer */
 	epaper_update(&display, false);
 
-	// Draw cricles
+	/* Draw cricles */
 	for (int x0 = 10; x0 < display.width; x0 += 20) {
 		for (int i = 0; i < 100; ++i) {
 			int x = x0 + 10 * sinf(2.0f * M_PI * i / 100);
@@ -72,11 +72,11 @@ main()
 				&= ~(0x80 >> (x & 0x07));
 		}
 
-		// Perform a pratial refresh
+		/* Perform a pratial refresh */
 		epaper_update(&display, true);
 	}
 
-	// Draw sine wave
+	/* Draw sine wave */
 	for (int x = 0; x < display.width; ++x) {
 		int y = (display.height / 2) + 100 * sin(4.0 * M_PI * x
 			/ display.width);
@@ -85,7 +85,7 @@ main()
 			&= ~(0x80 >> (x & 0x07));
 	}
 
-	// Display contents of the buffer
+	/* Display contents of the buffer */
 	epaper_update(&display, false);
 
 	while (true) {
