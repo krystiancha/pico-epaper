@@ -65,7 +65,7 @@ epaper_wait(const struct epaper *display)
 }
 
 void
-epaper_update(const struct epaper *display, bool partial)
+epaper_update(const struct epaper *display)
 {
 	gpio_put(display->rst_pin, 0);
 	sleep_ms(1);  /* 10 uS reset signal should be enough */
@@ -88,20 +88,15 @@ epaper_update(const struct epaper *display, bool partial)
 		display->black_border ? 0x77 : 0x97);
 
 	epaper_write(display, 0, 1, EPAPER_LUTC);
-	epaper_write_array(display, 1,
-		!partial ? lut_faster_vcom : lut_fastest_vcom, 44);
+	epaper_write_array(display, 1, lut_faster_vcom, 44);
 	epaper_write(display, 0, 1, EPAPER_LUTWW);
-	epaper_write_array(display, 1,
-		!partial ? lut_faster_w2w : lut_fastest_w2w, 42);
+	epaper_write_array(display, 1, lut_faster_w2w, 42);
 	epaper_write(display, 0, 1, EPAPER_LUTBW);
-	epaper_write_array(display, 1,
-		!partial ? lut_faster_b2w : lut_fastest_b2w, 42);
+	epaper_write_array(display, 1, lut_faster_b2w, 42);
 	epaper_write(display, 0, 1, EPAPER_LUTWB);
-	epaper_write_array(display, 1,
-		!partial ? lut_faster_w2b : lut_fastest_w2b, 42);
+	epaper_write_array(display, 1, lut_faster_w2b, 42);
 	epaper_write(display, 0, 1, EPAPER_LUTBB);
-	epaper_write_array(display, 1,
-		!partial ? lut_faster_b2b : lut_fastest_b2b, 42);
+	epaper_write_array(display, 1, lut_faster_b2b, 42);
 
 	epaper_write(display, 0, 1, EPAPER_DTM1);
 	epaper_write_array(display, 1, display->previous_buffer,

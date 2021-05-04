@@ -47,7 +47,7 @@ main()
 	memset(prev_display_buffer, 0xff, buffer_size);
 
 	/* Display contents of the buffer (clear display to white) */
-	epaper_update(&display, false);
+	epaper_update(&display);
 
 	/* Draw diagonal lines */
 	for (int x = 0; x < display.width; ++x) {
@@ -61,7 +61,7 @@ main()
 	}
 
 	/* Display contents of the buffer */
-	epaper_update(&display, false);
+	epaper_update(&display);
 
 	/* Draw cricles */
 	for (int x0 = 10; x0 < display.width; x0 += 20) {
@@ -86,7 +86,7 @@ main()
 	}
 
 	/* Display contents of the buffer */
-	epaper_update(&display, false);
+	epaper_update(&display);
 
 	while (true) {
 		tight_loop_contents();

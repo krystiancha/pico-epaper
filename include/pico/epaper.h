@@ -84,7 +84,7 @@ struct epaper {
  *
  * \param partial if true, uses partial update lookup table; full update otherwise
  */
-void epaper_update(const struct epaper *display, bool partial);
+void epaper_update(const struct epaper *display);
 
 enum epaper_commands {
 	EPAPER_PSR = 0x00,
